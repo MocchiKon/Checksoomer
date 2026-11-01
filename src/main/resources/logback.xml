@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Checksoomer is a double-clicked Swing app with no attached console, so diagnostics are
+  written to a rolling log file under the user's home directory. The log lives OUTSIDE
+  any scanned working directory on purpose, so it can't race the checksum walk or the
+  database self-checksum.
+-->
+<configuration>
+    <!--
+      No CONSOLE appender: this is a double-clicked Swing app with no attached console, so a console
+      appender is a dead sink. The rolling FILE appender below is the only real diagnostics sink.
+    -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.home}/.checksoomer/checksoomer.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${user.home}/.checksoomer/checksoomer.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>2MB</maxFileSize>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>10MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+    </root>
+
+    <logger name="com.example" level="DEBUG"/>
+</configuration>
